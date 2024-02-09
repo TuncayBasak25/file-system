@@ -61,6 +61,8 @@ export class Folder extends Entry<File> {
             }
         }
 
+        directoryHandle.close();
+
         return entryList;
     }
 

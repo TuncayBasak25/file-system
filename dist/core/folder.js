@@ -92,6 +92,7 @@ class Folder extends entry_1.Entry {
                 }
                 finally { if (e_1) throw e_1.error; }
             }
+            directoryHandle.close();
             return entryList;
         });
     }
