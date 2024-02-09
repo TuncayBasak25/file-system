@@ -48,22 +48,26 @@ export class Folder extends Entry<File> {
 
 
     private async getEntryList(): Promise<(Folder | File)[]> {
-        const entryList = [];
-
+        
         const directory = await fs.promises.opendir(this.path);
+        
+        try {
+            const entryList = [];
 
-        for await (const entry of directory) {
-            if (entry.isDirectory()) {
-                entryList.push(await this.openFolder(entry.name));
+            for await (const entry of directory) {
+                if (entry.isDirectory()) {
+                    entryList.push(await this.openFolder(entry.name));
+                }
+                else if (entry.isFile()) {
+                    entryList.push(await this.openFile(entry.name));
+                }
             }
-            else if (entry.isFile()) {
-                entryList.push(await this.openFile(entry.name));
-            }
+
+            return entryList;
         }
-
-        directory.close();
-
-        return entryList;
+        finally {
+            directory.close();
+        }
     }
 
     public get entryList(): Promise<(Folder | File) []> {
