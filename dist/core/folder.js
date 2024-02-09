@@ -71,9 +71,10 @@ class Folder extends entry_1.Entry {
         var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const entryList = [];
+            const directory = yield fs_1.default.promises.opendir(this.path);
             try {
-                for (var _d = true, _e = __asyncValues(yield fs_1.default.promises.opendir(this.path)), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
-                    _c = _f.value;
+                for (var _d = true, directory_1 = __asyncValues(directory), directory_1_1; directory_1_1 = yield directory_1.next(), _a = directory_1_1.done, !_a; _d = true) {
+                    _c = directory_1_1.value;
                     _d = false;
                     const entry = _c;
                     if (entry.isDirectory()) {
@@ -87,10 +88,11 @@ class Folder extends entry_1.Entry {
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
+                    if (!_d && !_a && (_b = directory_1.return)) yield _b.call(directory_1);
                 }
                 finally { if (e_1) throw e_1.error; }
             }
+            directory.close();
             return entryList;
         });
     }
