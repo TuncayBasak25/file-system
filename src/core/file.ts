@@ -26,10 +26,10 @@ export class File extends Entry<File> {
     }
 
     public async require(): Promise<any> {
-        if (this.extension === '.js') {
+        if (this.extension === 'js') {
             return require(this.path.slice(0, -3));
         }
-        if (this.extension === '.json') {
+        if (this.extension === 'json') {
             return JSON.parse(await this.read());
         }
 

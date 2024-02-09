@@ -36,10 +36,10 @@ class File extends entry_1.Entry {
     }
     require() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (this.extension === '.js') {
+            if (this.extension === 'js') {
                 return require(this.path.slice(0, -3));
             }
-            if (this.extension === '.json') {
+            if (this.extension === 'json') {
                 return JSON.parse(yield this.read());
             }
             throw new Error("This file cannot be required!");
