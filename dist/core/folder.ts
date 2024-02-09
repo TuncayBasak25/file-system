@@ -38,6 +38,14 @@ export class Folder extends Entry<File> {
         return File.open(this.path, name);
     }
 
+    public async hasFolder(name: string): Promise<Folder | null> {
+        return (await this.folderList).find(folder => folder.name === name) || null;
+    }
+
+    public async hasFile(name: string): Promise<File | null> {
+        return (await this.fileList).find(file => file.name === name) || null;
+    }
+
 
     private async getEntryList(): Promise<(Folder | File)[]> {
         const entryList = [];

@@ -57,6 +57,16 @@ class Folder extends entry_1.Entry {
             return file_1.File.open(this.path, name);
         });
     }
+    hasFolder(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.folderList).find(folder => folder.name === name) || null;
+        });
+    }
+    hasFile(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return (yield this.fileList).find(file => file.name === name) || null;
+        });
+    }
     getEntryList() {
         var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
