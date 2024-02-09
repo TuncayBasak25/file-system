@@ -70,34 +70,29 @@ class Folder extends entry_1.Entry {
     getEntryList() {
         var _a, e_1, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            const directory = yield fs_1.default.promises.opendir(this.path);
+            const entryList = [];
+            const directoryHandle = yield fs_1.default.promises.opendir(this.path);
             try {
-                const entryList = [];
-                try {
-                    for (var _d = true, directory_1 = __asyncValues(directory), directory_1_1; directory_1_1 = yield directory_1.next(), _a = directory_1_1.done, !_a; _d = true) {
-                        _c = directory_1_1.value;
-                        _d = false;
-                        const entry = _c;
-                        if (entry.isDirectory()) {
-                            entryList.push(yield this.openFolder(entry.name));
-                        }
-                        else if (entry.isFile()) {
-                            entryList.push(yield this.openFile(entry.name));
-                        }
+                for (var _d = true, directoryHandle_1 = __asyncValues(directoryHandle), directoryHandle_1_1; directoryHandle_1_1 = yield directoryHandle_1.next(), _a = directoryHandle_1_1.done, !_a; _d = true) {
+                    _c = directoryHandle_1_1.value;
+                    _d = false;
+                    const entry = _c;
+                    if (entry.isDirectory()) {
+                        entryList.push(yield this.openFolder(entry.name));
+                    }
+                    else if (entry.isFile()) {
+                        entryList.push(yield this.openFile(entry.name));
                     }
                 }
-                catch (e_1_1) { e_1 = { error: e_1_1 }; }
-                finally {
-                    try {
-                        if (!_d && !_a && (_b = directory_1.return)) yield _b.call(directory_1);
-                    }
-                    finally { if (e_1) throw e_1.error; }
-                }
-                return entryList;
             }
+            catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
-                directory.close();
+                try {
+                    if (!_d && !_a && (_b = directoryHandle_1.return)) yield _b.call(directoryHandle_1);
+                }
+                finally { if (e_1) throw e_1.error; }
             }
+            return entryList;
         });
     }
     get entryList() {
