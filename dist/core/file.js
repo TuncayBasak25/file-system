@@ -60,9 +60,9 @@ class File extends entry_1.Entry {
             yield fs_1.default.promises.appendFile(this.path, text);
         });
     }
-    copy(destPath) {
+    copy(destPath, ...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield fs_1.default.promises.copyFile(this.path, destPath);
+            yield fs_1.default.promises.copyFile(this.path, path_1.default.join(destPath, ...pathList));
         });
     }
     get basename() {

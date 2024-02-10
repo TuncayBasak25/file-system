@@ -49,8 +49,8 @@ export class File extends Entry<File> {
         await fs.promises.appendFile(this.path, text);
     }
 
-    public async copy(destPath: string) {
-        await fs.promises.copyFile(this.path, destPath);
+    public async copy(destPath: string, ...pathList: string[]) {
+        await fs.promises.copyFile(this.path, path.join(destPath, ...pathList));
     }
 
 

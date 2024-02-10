@@ -62,6 +62,13 @@ class Folder extends entry_1.Entry {
             return yield (yield this.openFile(name)).read();
         });
     }
+    //Maybe implement this in the future
+    // public async writeFile(name: string, string_or_file: string | File | Promise<File>) {
+    //     (await this.openFile(name)).write(string_or_file);
+    // }
+    // public async appendFile(name: string, string_or_file: string | File | Promise<File>) {
+    //     (await this.openFile(name)).append(string_or_file);
+    // }
     hasFolder(name) {
         return __awaiter(this, void 0, void 0, function* () {
             return (yield this.folderList).find(folder => folder.name === name) || null;

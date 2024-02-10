@@ -42,6 +42,15 @@ export class Folder extends Entry<File> {
         return await (await this.openFile(name)).read();
     }
 
+    //Maybe implement this in the future
+    // public async writeFile(name: string, string_or_file: string | File | Promise<File>) {
+    //     (await this.openFile(name)).write(string_or_file);
+    // }
+
+    // public async appendFile(name: string, string_or_file: string | File | Promise<File>) {
+    //     (await this.openFile(name)).append(string_or_file);
+    // }
+
     public async hasFolder(name: string): Promise<Folder | null> {
         return (await this.folderList).find(folder => folder.name === name) || null;
     }
