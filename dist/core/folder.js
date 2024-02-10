@@ -47,19 +47,19 @@ class Folder extends entry_1.Entry {
             return this;
         });
     }
-    openFolder(name) {
+    openFolder(...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Folder.open(this.path, name);
+            return Folder.open(this.path, ...pathList);
         });
     }
-    openFile(name) {
+    openFile(...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
-            return file_1.File.open(this.path, name);
+            return file_1.File.open(this.path, ...pathList);
         });
     }
-    readFile(name) {
+    readFile(...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield (yield this.openFile(name)).read();
+            return yield (yield this.openFile(...pathList)).read();
         });
     }
     //Maybe implement this in the future

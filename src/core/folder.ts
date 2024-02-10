@@ -30,16 +30,16 @@ export class Folder extends Entry<File> {
         return this;
     }
  
-    public async openFolder(name: string): Promise<Folder> {
-        return Folder.open(this.path, name);
+    public async openFolder(...pathList: string[]): Promise<Folder> {
+        return Folder.open(this.path, ...pathList);
     }
  
-    public async openFile(name: string): Promise<File> {
-        return File.open(this.path, name);
+    public async openFile(...pathList: string[]): Promise<File> {
+        return File.open(this.path, ...pathList);
     }
 
-    public async readFile(name: string): Promise<string> {
-        return await (await this.openFile(name)).read();
+    public async readFile(...pathList: string[]): Promise<string> {
+        return await (await this.openFile(...pathList)).read();
     }
 
     //Maybe implement this in the future

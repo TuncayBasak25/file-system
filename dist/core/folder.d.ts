@@ -3,9 +3,9 @@ import { Entry } from "./entry";
 export declare class Folder extends Entry<File> {
     static open(folderPath: string, ...pathList: string[]): Promise<Folder>;
     private init;
-    openFolder(name: string): Promise<Folder>;
-    openFile(name: string): Promise<File>;
-    readFile(name: string): Promise<string>;
+    openFolder(...pathList: string[]): Promise<Folder>;
+    openFile(...pathList: string[]): Promise<File>;
+    readFile(...pathList: string[]): Promise<string>;
     hasFolder(name: string): Promise<Folder | null>;
     hasFile(name: string): Promise<File | null>;
     private getEntryList;
