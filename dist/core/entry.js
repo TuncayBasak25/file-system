@@ -94,7 +94,7 @@ class Entry {
     get watcher() {
         if (this.$watcher)
             return this.$watcher;
-        this.$watcher = (0, fs_1.watch)(this.path);
+        this.$watcher = (0, fs_1.watch)(this.path, { recursive: true });
         return this.$watcher;
     }
 }

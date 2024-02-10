@@ -66,7 +66,7 @@ export abstract class Entry<T extends Folder | File> {
     public get watcher(): FSWatcher {
         if (this.$watcher) return this.$watcher;
 
-        this.$watcher = watch(this.path);
+        this.$watcher = watch(this.path, { recursive: true });
 
         return this.$watcher;
     }
