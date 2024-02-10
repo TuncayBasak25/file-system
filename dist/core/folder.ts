@@ -38,6 +38,10 @@ export class Folder extends Entry<File> {
         return File.open(this.path, name);
     }
 
+    public async readFile(name: string): Promise<string> {
+        return await (await this.openFile(name)).read();
+    }
+
     public async hasFolder(name: string): Promise<Folder | null> {
         return (await this.folderList).find(folder => folder.name === name) || null;
     }
@@ -52,7 +56,7 @@ export class Folder extends Entry<File> {
 
         const directoryHandle = await fs.promises.opendir(this.path);
         
-        for await (const entry of directoryHandle) {
+        for await (const entry of await directoryHandle.) {
             if (entry.isDirectory()) {
                 entryList.push(await this.openFolder(entry.name));
             }

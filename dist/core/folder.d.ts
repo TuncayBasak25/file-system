@@ -5,6 +5,7 @@ export declare class Folder extends Entry<File> {
     private init;
     openFolder(name: string): Promise<Folder>;
     openFile(name: string): Promise<File>;
+    readFile(name: string): Promise<string>;
     hasFolder(name: string): Promise<Folder | null>;
     hasFile(name: string): Promise<File | null>;
     private getEntryList;
