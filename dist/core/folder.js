@@ -85,7 +85,7 @@ class Folder extends entry_1.Entry {
             const entryList = [];
             const directoryHandle = yield fs_1.default.promises.opendir(this.path);
             try {
-                for (var _d = true, _e = __asyncValues(yield directoryHandle.), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
+                for (var _d = true, _e = __asyncValues(yield directoryHandle), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
                     _c = _f.value;
                     _d = false;
                     const entry = _c;

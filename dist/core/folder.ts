@@ -65,7 +65,7 @@ export class Folder extends Entry<File> {
 
         const directoryHandle = await fs.promises.opendir(this.path);
         
-        for await (const entry of await directoryHandle.) {
+        for await (const entry of await directoryHandle) {
             if (entry.isDirectory()) {
                 entryList.push(await this.openFolder(entry.name));
             }
