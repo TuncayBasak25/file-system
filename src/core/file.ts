@@ -50,7 +50,11 @@ export class File extends Entry<File> {
     }
 
     public async copy(destPath: string, ...pathList: string[]) {
-        await fs.promises.copyFile(this.path, path.join(destPath, ...pathList));
+        const content = await this.read();
+
+        const file = await File.open(path.join(destPath, ...pathList));
+
+        await file.write(content);
     }
 
 

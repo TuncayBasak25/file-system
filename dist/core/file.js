@@ -62,7 +62,9 @@ class File extends entry_1.Entry {
     }
     copy(destPath, ...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield fs_1.default.promises.copyFile(this.path, path_1.default.join(destPath, ...pathList));
+            const content = yield this.read();
+            const file = yield File.open(path_1.default.join(destPath, ...pathList));
+            yield file.write(content);
         });
     }
     get basename() {
