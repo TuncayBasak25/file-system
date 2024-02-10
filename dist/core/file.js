@@ -65,6 +65,7 @@ class File extends entry_1.Entry {
             const content = yield this.read();
             const file = yield File.open(path_1.default.join(destPath, ...pathList));
             yield file.write(content);
+            return file;
         });
     }
     get basename() {

@@ -6,7 +6,7 @@ export declare class File extends Entry<File> {
     read(): Promise<string>;
     write(text: string): Promise<void>;
     append(text: string): Promise<void>;
-    copy(destPath: string, ...pathList: string[]): Promise<void>;
+    copy(destPath: string, ...pathList: string[]): Promise<File>;
     get basename(): string;
     get extension(): string;
 }
