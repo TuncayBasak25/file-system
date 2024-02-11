@@ -31,7 +31,7 @@ export class File extends Entry<File> {
             return require(this.path.slice(0, -3)) as T;
         }
 
-        throw new Error("This file cannot be required!");
+        throw new Error("This file cannot be required! File: " + this.path.slice(0, -3));
     }
 
     public async parseJSON(): Promise<any> {
