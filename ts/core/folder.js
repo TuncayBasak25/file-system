@@ -70,6 +70,15 @@ class Folder extends entry_1.Entry {
     //     (await this.openFile(name)).append(string_or_file);
     // }
     /**
+     * Returns the first entry found from the entry name list
+     */
+    hasEntry(...nameList) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const file = yield this.entryList;
+            return (yield this.entryList).find(entry => nameList.includes(entry.name)) || null;
+        });
+    }
+    /**
      * Returns the first folder found from the folder name list
      */
     hasFolder(...nameList) {

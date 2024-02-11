@@ -29,6 +29,7 @@ export class Folder extends Entry<File> {
 
         return this;
     }
+
  
     public async openFolder(...pathList: string[]): Promise<Folder> {
         return Folder.open(this.path, ...pathList);
@@ -50,6 +51,15 @@ export class Folder extends Entry<File> {
     // public async appendFile(name: string, string_or_file: string | File | Promise<File>) {
     //     (await this.openFile(name)).append(string_or_file);
     // }
+
+    /**
+     * Returns the first entry found from the entry name list
+     */
+    public async hasEntry(...nameList: string[]): Promise<Folder | File | null> {
+        const file = await this.entryList;
+
+        return (await this.entryList).find(entry => nameList.includes(entry.name)) || null;
+    }
 
     /**
      * Returns the first folder found from the folder name list
