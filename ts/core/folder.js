@@ -85,8 +85,8 @@ class Folder extends entry_1.Entry {
             const entryList = [];
             const directoryHandle = yield fs_1.default.promises.opendir(this.path);
             try {
-                for (var _d = true, _e = __asyncValues(yield directoryHandle), _f; _f = yield _e.next(), _a = _f.done, !_a; _d = true) {
-                    _c = _f.value;
+                for (var _d = true, directoryHandle_1 = __asyncValues(directoryHandle), directoryHandle_1_1; directoryHandle_1_1 = yield directoryHandle_1.next(), _a = directoryHandle_1_1.done, !_a; _d = true) {
+                    _c = directoryHandle_1_1.value;
                     _d = false;
                     const entry = _c;
                     if (entry.isDirectory()) {
@@ -100,7 +100,7 @@ class Folder extends entry_1.Entry {
             catch (e_1_1) { e_1 = { error: e_1_1 }; }
             finally {
                 try {
-                    if (!_d && !_a && (_b = _e.return)) yield _b.call(_e);
+                    if (!_d && !_a && (_b = directoryHandle_1.return)) yield _b.call(directoryHandle_1);
                 }
                 finally { if (e_1) throw e_1.error; }
             }
@@ -137,6 +137,22 @@ class Folder extends entry_1.Entry {
     }
     get fileList() {
         return this.getFileList();
+    }
+    getRecursiveFileList(fileList = []) {
+        return __awaiter(this, void 0, void 0, function* () {
+            for (const entry of yield this.entryList) {
+                if (entry instanceof file_1.File) {
+                    fileList.push(entry);
+                }
+                else if (entry instanceof Folder) {
+                    yield entry.getRecursiveFileList(fileList);
+                }
+            }
+            return fileList;
+        });
+    }
+    get recursiveFileList() {
+        return this.getRecursiveFileList();
     }
     getFolders() {
         return __awaiter(this, void 0, void 0, function* () {
