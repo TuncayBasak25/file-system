@@ -38,7 +38,7 @@ class File extends entry_1.Entry {
         if (this.extension === 'js') {
             return require(this.path.slice(0, -3));
         }
-        throw new Error("This file cannot be required!");
+        throw new Error("This file cannot be required! File: " + this.path.slice(0, -3));
     }
     parseJSON() {
         return __awaiter(this, void 0, void 0, function* () {
