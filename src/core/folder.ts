@@ -65,7 +65,7 @@ export class Folder extends Entry<File> {
 
         const directoryHandle = await fs.promises.opendir(this.path);
         
-        for await (const entry of await directoryHandle) {
+        for await (const entry of directoryHandle) {
             if (entry.isDirectory()) {
                 entryList.push(await this.openFolder(entry.name));
             }
@@ -113,6 +113,23 @@ export class Folder extends Entry<File> {
 
     public get fileList(): Promise<File[]> {
         return this.getFileList();
+    }
+
+    private async getRecursiveFileList(fileList: File[] = []): Promise<File[]> {
+        for (const entry of await this.entryList) {
+            if (entry instanceof File) {
+                fileList.push(entry);
+            }
+            else if (entry instanceof Folder) {
+                await entry.getRecursiveFileList(fileList);
+            }
+        }
+
+        return fileList;
+    }
+
+    public get recursiveFileList(): Promise<File[]> {
+        return this.getRecursiveFileList();
     }
 
 
