@@ -28,7 +28,7 @@ export class File extends Entry<File> {
 
     public async require<T = any>(): Promise<T> {
         if (this.extension === 'js') {
-            return import("file://" + this.path);
+            return import(path.join("file:", this.path));
         }
         else if (this.extension === 'json') {
             return JSON.parse(await this.read());

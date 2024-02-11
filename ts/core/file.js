@@ -60,7 +60,7 @@ class File extends entry_1.Entry {
     require() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.extension === 'js') {
-                return Promise.resolve(`${"file://" + this.path}`).then(s => __importStar(require(s)));
+                return Promise.resolve(`${path_1.default.join("file:", this.path)}`).then(s => __importStar(require(s)));
             }
             else if (this.extension === 'json') {
                 return JSON.parse(yield this.read());
