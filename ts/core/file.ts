@@ -26,15 +26,20 @@ export class File extends Entry<File> {
         return this;
     }
 
-    public async require<T = any>(): Promise<T> {
+    public require<T = any>(): T {
         if (this.extension === 'js') {
-            return import(path.join("file:", this.path));
-        }
-        else if (this.extension === 'json') {
-            return JSON.parse(await this.read());
+            return require(this.path.slice(0, -3)) as T;
         }
 
         throw new Error("This file cannot be required!");
+    }
+
+    public async parseJSON(): Promise<any> {
+        if (this.extension === 'json') {
+            return JSON.parse(await this.read());
+        }
+
+        throw new Error("This file cannot be parsed as JSON!");
     }
 
 
