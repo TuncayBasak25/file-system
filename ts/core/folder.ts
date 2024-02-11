@@ -51,12 +51,18 @@ export class Folder extends Entry<File> {
     //     (await this.openFile(name)).append(string_or_file);
     // }
 
-    public async hasFolder(name: string): Promise<Folder | null> {
-        return (await this.folderList).find(folder => folder.name === name) || null;
+    /**
+     * Returns the first folder found from the folder name list
+     */
+    public async hasFolder(...nameList: string[]): Promise<Folder | null> {
+        return (await this.folderList).find(folder => nameList.includes(folder.name)) || null;
     }
 
-    public async hasFile(name: string): Promise<File | null> {
-        return (await this.fileList).find(file => file.name === name) || null;
+    /**
+     * Returns the first file found from the file name list
+     */
+    public async hasFile(...nameList: string[]): Promise<File | null> {
+        return (await this.fileList).find(file => nameList.includes(file.name)) || null;
     }
 
 
@@ -158,4 +164,13 @@ export class Folder extends Entry<File> {
         return this.getFiles();
     }
 
+    
+
+    public async require<T = any>(): Promise<T> {
+        const indexFile = await this.hasFile("index.js", this.name + ".js");
+
+        if (indexFile) return await indexFile.require<T>();
+
+        throw new Error("To import a folder this folder has to have a index file or a file of the name of the folder FOLDER: " + this.path);
+    }
 }

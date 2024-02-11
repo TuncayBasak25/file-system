@@ -69,14 +69,20 @@ class Folder extends entry_1.Entry {
     // public async appendFile(name: string, string_or_file: string | File | Promise<File>) {
     //     (await this.openFile(name)).append(string_or_file);
     // }
-    hasFolder(name) {
+    /**
+     * Returns the first folder found from the folder name list
+     */
+    hasFolder(...nameList) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.folderList).find(folder => folder.name === name) || null;
+            return (yield this.folderList).find(folder => nameList.includes(folder.name)) || null;
         });
     }
-    hasFile(name) {
+    /**
+     * Returns the first file found from the file name list
+     */
+    hasFile(...nameList) {
         return __awaiter(this, void 0, void 0, function* () {
-            return (yield this.fileList).find(file => file.name === name) || null;
+            return (yield this.fileList).find(file => nameList.includes(file.name)) || null;
         });
     }
     getEntryList() {
@@ -175,6 +181,14 @@ class Folder extends entry_1.Entry {
     }
     get files() {
         return this.getFiles();
+    }
+    require() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const indexFile = yield this.hasFile("index.js", this.name + ".js");
+            if (indexFile)
+                return yield indexFile.require();
+            throw new Error("To import a folder this folder has to have a index file or a file of the name of the folder FOLDER: " + this.path);
+        });
     }
 }
 exports.Folder = Folder;

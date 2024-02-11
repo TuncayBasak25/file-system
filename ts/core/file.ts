@@ -3,6 +3,7 @@ import fs from "fs";
 import { Folder } from "./folder";
 import { Entry } from "./entry";
 
+
 export class File extends Entry<File> {
 
     static async open(filePath: string, ...pathList: string[]): Promise<File> {
@@ -25,11 +26,11 @@ export class File extends Entry<File> {
         return this;
     }
 
-    public async require(): Promise<any> {
+    public async require<T = any>(): Promise<T> {
         if (this.extension === 'js') {
-            return require(this.path.slice(0, -3));
+            return import("file://" + this.path);
         }
-        if (this.extension === 'json') {
+        else if (this.extension === 'json') {
             return JSON.parse(await this.read());
         }
 
