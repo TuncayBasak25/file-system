@@ -3,6 +3,7 @@ import path from "path";
 import { File } from "./file";
 import { Entry } from "./entry";
 
+
 export class Folder extends Entry<File> {
 
     static async open(folderPath: string, ...pathList: string[]): Promise<Folder> {
@@ -35,10 +36,12 @@ export class Folder extends Entry<File> {
         return Folder.open(this.path, ...pathList);
     }
 
-    public async copy(targetFolder: Folder): Promise<void> {
+    public async copy(targetFolder: Folder, exclude: string | string[] = []): Promise<void> {
         const promiseList: Promise<any>[] = [];
 
-        for (const entry of await this.entryList) {
+        if (typeof exclude === "string") exclude = [exclude];
+
+        for (const entry of (await this.entryList).filter(file => !exclude.includes(file.name))) {
             if (entry instanceof File) promiseList.push(entry.copy(targetFolder.path, entry.name));
             else promiseList.push(entry.copy(entry));
         }

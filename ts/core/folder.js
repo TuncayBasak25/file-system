@@ -52,10 +52,12 @@ class Folder extends entry_1.Entry {
             return Folder.open(this.path, ...pathList);
         });
     }
-    copy(targetFolder) {
+    copy(targetFolder, exclude = []) {
         return __awaiter(this, void 0, void 0, function* () {
             const promiseList = [];
-            for (const entry of yield this.entryList) {
+            if (typeof exclude === "string")
+                exclude = [exclude];
+            for (const entry of (yield this.entryList).filter(file => !exclude.includes(file.name))) {
                 if (entry instanceof file_1.File)
                     promiseList.push(entry.copy(targetFolder.path, entry.name));
                 else
