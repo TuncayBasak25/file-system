@@ -52,16 +52,17 @@ class Folder extends entry_1.Entry {
             return Folder.open(this.path, ...pathList);
         });
     }
-    copy(targetFolder, exclude = []) {
+    copy(targetPath, exclude = []) {
         return __awaiter(this, void 0, void 0, function* () {
             const promiseList = [];
+            const targetFolder = yield Folder.open(targetPath);
             if (typeof exclude === "string")
                 exclude = [exclude];
             for (const entry of (yield this.entryList).filter(file => !exclude.includes(file.name))) {
                 if (entry instanceof file_1.File)
                     promiseList.push(entry.copy(targetFolder.path, entry.name));
                 else
-                    promiseList.push(entry.copy(entry));
+                    promiseList.push(entry.copy(path_1.default.join(targetFolder.path, entry.name), exclude));
             }
             yield Promise.all(promiseList);
         });

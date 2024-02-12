@@ -36,14 +36,16 @@ export class Folder extends Entry<File> {
         return Folder.open(this.path, ...pathList);
     }
 
-    public async copy(targetFolder: Folder, exclude: string | string[] = []): Promise<void> {
+    public async copy(targetPath: string, exclude: string | string[] = []): Promise<void> {
         const promiseList: Promise<any>[] = [];
+
+        const targetFolder = await Folder.open(targetPath);
 
         if (typeof exclude === "string") exclude = [exclude];
 
         for (const entry of (await this.entryList).filter(file => !exclude.includes(file.name))) {
             if (entry instanceof File) promiseList.push(entry.copy(targetFolder.path, entry.name));
-            else promiseList.push(entry.copy(entry));
+            else promiseList.push(entry.copy(path.join(targetFolder.path, entry.name), exclude));
         }
 
         await Promise.all(promiseList);
