@@ -22,7 +22,7 @@ export class Folder extends Entry<File> {
 
     private async init(): Promise<this> {
         try {
-            await fs.promises.opendir(this.path);
+            (await fs.promises.opendir(this.path)).close();
         }
         catch (e) {
             await fs.promises.mkdir(this.path);
@@ -94,14 +94,15 @@ export class Folder extends Entry<File> {
 
     private async getEntryList(): Promise<(Folder | File)[]> {
         const entryList = [];
+
+        const directoryHandle = await fs.promises.opendir(this.path);
         
-        for (const entryName of fs.readdirSync(this.path)) {
-            const entry = fs.lstatSync(path.join(this.path, entryName));
+        for await (const entry of directoryHandle) {
             if (entry.isDirectory()) {
-                entryList.push(await this.openFolder(entryName));
+                entryList.push(await this.openFolder(entry.name));
             }
             else if (entry.isFile()) {
-                entryList.push(await this.openFile(entryName));
+                entryList.push(await this.openFile(entry.name));
             }
         }
 
