@@ -34,6 +34,17 @@ export class Folder extends Entry<File> {
     public async openFolder(...pathList: string[]): Promise<Folder> {
         return Folder.open(this.path, ...pathList);
     }
+
+    public async copy(targetFolder: Folder): Promise<void> {
+        const promiseList: Promise<any>[] = [];
+
+        for (const entry of await this.entryList) {
+            if (entry instanceof File) promiseList.push(entry.copy(targetFolder.path, entry.name));
+            else promiseList.push(entry.copy(entry));
+        }
+
+        await Promise.all(promiseList);
+    }
  
     public async openFile(...pathList: string[]): Promise<File> {
         return File.open(this.path, ...pathList);

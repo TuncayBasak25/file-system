@@ -52,6 +52,18 @@ class Folder extends entry_1.Entry {
             return Folder.open(this.path, ...pathList);
         });
     }
+    copy(targetFolder) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const promiseList = [];
+            for (const entry of yield this.entryList) {
+                if (entry instanceof file_1.File)
+                    promiseList.push(entry.copy(targetFolder.path, entry.name));
+                else
+                    promiseList.push(entry.copy(entry));
+            }
+            yield Promise.all(promiseList);
+        });
+    }
     openFile(...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
             return file_1.File.open(this.path, ...pathList);
