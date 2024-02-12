@@ -201,3 +201,7 @@ class Folder extends entry_1.Entry {
     }
 }
 exports.Folder = Folder;
+const old_warn = console.warn;
+console.warn = (...argList) => {
+    old_warn(...argList.filter(arg => typeof arg !== "string" || !arg.match(/Warning: Closing directory handle on garbage collection/)));
+};

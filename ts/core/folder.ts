@@ -184,3 +184,9 @@ export class Folder extends Entry<File> {
         throw new Error("To import a folder this folder has to have a index file or a file of the name of the folder FOLDER: " + this.path);
     }
 }
+
+const old_warn = console.warn;
+
+console.warn = (...argList: any[]) => {
+    old_warn(...argList.filter(arg => typeof arg !== "string" || !arg.match(/Warning: Closing directory handle on garbage collection/)));
+}
