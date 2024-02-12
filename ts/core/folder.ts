@@ -96,7 +96,7 @@ export class Folder extends Entry<File> {
         const entryList = [];
         
         for (const entryName of fs.readdirSync(this.path)) {
-            const entry = await fs.promises.lstat(path.join(this.path, entryName));
+            const entry = fs.lstatSync(path.join(this.path, entryName));
             if (entry.isDirectory()) {
                 entryList.push(await this.openFolder(entryName));
             }

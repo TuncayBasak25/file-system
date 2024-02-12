@@ -106,7 +106,7 @@ class Folder extends entry_1.Entry {
         return __awaiter(this, void 0, void 0, function* () {
             const entryList = [];
             for (const entryName of fs_1.default.readdirSync(this.path)) {
-                const entry = yield fs_1.default.promises.lstat(path_1.default.join(this.path, entryName));
+                const entry = fs_1.default.lstatSync(path_1.default.join(this.path, entryName));
                 if (entry.isDirectory()) {
                     entryList.push(yield this.openFolder(entryName));
                 }
