@@ -6,6 +6,10 @@ import { Entry } from "./entry";
 
 export class File extends Entry<File> {
 
+    static async read(filePath: string, ...pathList: string[]): Promise<string> {
+        return await (await File.open(filePath, ...pathList)).read();
+    }
+
     static async open(filePath: string, ...pathList: string[]): Promise<File> {
         const absolute = path.resolve(path.join(filePath, ...pathList));
 

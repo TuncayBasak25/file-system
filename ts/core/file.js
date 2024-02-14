@@ -17,6 +17,11 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const entry_1 = require("./entry");
 class File extends entry_1.Entry {
+    static read(filePath, ...pathList) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield (yield File.open(filePath, ...pathList)).read();
+        });
+    }
     static open(filePath, ...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
             const absolute = path_1.default.resolve(path_1.default.join(filePath, ...pathList));
