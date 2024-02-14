@@ -14,6 +14,10 @@ export abstract class Entry<T extends Folder | File> {
         return path.basename(this.path);
     }
 
+    public get basename(): string {
+        return this.name;
+    }
+
     public get parent(): Promise<Folder> {
         return Folder.open(this.path, "..");
     }

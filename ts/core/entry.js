@@ -47,6 +47,9 @@ class Entry {
     get name() {
         return path_1.default.basename(this.path);
     }
+    get basename() {
+        return this.name;
+    }
     get parent() {
         return folder_1.Folder.open(this.path, "..");
     }
