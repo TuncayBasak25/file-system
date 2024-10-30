@@ -43,26 +43,16 @@ export abstract class Entry<T extends Folder | File> {
         this.$watcher?.close(); 
     }
 
-    public async rename(newName: string) {
+    public deleteSync() {
         if (this instanceof Folder) {
+            fs.rmdirSync(this.path);
             this.removeFolderInstance();
         }
         else {
             this.removeFileInstance();
+            fs.rmSync(this.path);
         }
-        
-        const separatedPath = this.path.split(path.sep);
-        separatedPath[separatedPath.length - 1] = newName;
 
-        (this as any).path = path.join(...separatedPath);
-
-        if (this instanceof Folder) {
-            Entry.folderInstances[this.path] = this;
-        }
-        else if (this instanceof File) {
-            Entry.fileInstances[this.path] = this;
-        }
-        
         this.$watcher?.close();
     }
 

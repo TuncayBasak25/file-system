@@ -22,6 +22,9 @@ class File extends entry_1.Entry {
             return yield (yield File.open(filePath, ...pathList)).read();
         });
     }
+    static readSync(filePath, ...pathList) {
+        return File.openSync(filePath, ...pathList).readSync();
+    }
     static open(filePath, ...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
             const absolute = path_1.default.resolve(path_1.default.join(filePath, ...pathList));
@@ -33,11 +36,24 @@ class File extends entry_1.Entry {
             return yield file.init();
         });
     }
+    static openSync(filePath, ...pathList) {
+        const absolute = path_1.default.resolve(path_1.default.join(filePath, ...pathList));
+        if (File.fileInstances[absolute]) {
+            return File.fileInstances[absolute];
+        }
+        const file = new File(absolute);
+        File.fileInstances[absolute] = file;
+        return file.initSync();
+    }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             yield fs_1.default.promises.appendFile(this.path, "");
             return this;
         });
+    }
+    initSync() {
+        fs_1.default.appendFileSync(this.path, "");
+        return this;
     }
     require() {
         if (this.extension === 'js') {
@@ -53,20 +69,35 @@ class File extends entry_1.Entry {
             throw new Error("This file cannot be parsed as JSON!");
         });
     }
+    parseJSONSync() {
+        if (this.extension === 'json') {
+            return JSON.parse(this.readSync());
+        }
+        throw new Error("This file cannot be parsed as JSON!");
+    }
     read() {
         return __awaiter(this, void 0, void 0, function* () {
             return fs_1.default.promises.readFile(this.path, 'utf8');
         });
+    }
+    readSync() {
+        return fs_1.default.readFileSync(this.path, 'utf8');
     }
     write(text) {
         return __awaiter(this, void 0, void 0, function* () {
             yield fs_1.default.promises.writeFile(this.path, text);
         });
     }
+    writeSync(text) {
+        fs_1.default.writeFileSync(this.path, text);
+    }
     append(text) {
         return __awaiter(this, void 0, void 0, function* () {
             yield fs_1.default.promises.appendFile(this.path, text);
         });
+    }
+    appendSync(text) {
+        fs_1.default.appendFileSync(this.path, text);
     }
     copy(destPath, ...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -75,6 +106,12 @@ class File extends entry_1.Entry {
             yield file.write(content);
             return file;
         });
+    }
+    copySync(destPath, ...pathList) {
+        const content = this.readSync();
+        const file = File.openSync(path_1.default.join(destPath, ...pathList));
+        file.writeSync(content);
+        return file;
     }
     get basename() {
         return this.name.includes(".") ? this.name.split(".").slice(0, -1).join(".") : this.name;

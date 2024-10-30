@@ -38,7 +38,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Entry = void 0;
 const path_1 = __importDefault(require("path"));
 const folder_1 = require("./folder");
-const file_1 = require("./file");
 const fs_1 = __importStar(require("fs"));
 class Entry {
     constructor(path) {
@@ -73,26 +72,17 @@ class Entry {
             (_a = this.$watcher) === null || _a === void 0 ? void 0 : _a.close();
         });
     }
-    rename(newName) {
+    deleteSync() {
         var _a;
-        return __awaiter(this, void 0, void 0, function* () {
-            if (this instanceof folder_1.Folder) {
-                this.removeFolderInstance();
-            }
-            else {
-                this.removeFileInstance();
-            }
-            const separatedPath = this.path.split(path_1.default.sep);
-            separatedPath[separatedPath.length - 1] = newName;
-            this.path = path_1.default.join(...separatedPath);
-            if (this instanceof folder_1.Folder) {
-                Entry.folderInstances[this.path] = this;
-            }
-            else if (this instanceof file_1.File) {
-                Entry.fileInstances[this.path] = this;
-            }
-            (_a = this.$watcher) === null || _a === void 0 ? void 0 : _a.close();
-        });
+        if (this instanceof folder_1.Folder) {
+            fs_1.default.rmdirSync(this.path);
+            this.removeFolderInstance();
+        }
+        else {
+            this.removeFileInstance();
+            fs_1.default.rmSync(this.path);
+        }
+        (_a = this.$watcher) === null || _a === void 0 ? void 0 : _a.close();
     }
     get watcher() {
         if (this.$watcher)

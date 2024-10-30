@@ -36,6 +36,15 @@ class Folder extends entry_1.Entry {
             return yield folder.init();
         });
     }
+    static openSync(folderPath, ...pathList) {
+        const absolute = path_1.default.resolve(path_1.default.join(folderPath, ...pathList));
+        if (Folder.folderInstances[absolute]) {
+            return Folder.folderInstances[absolute];
+        }
+        const folder = new Folder(absolute);
+        Folder.folderInstances[absolute] = folder;
+        return folder.initSync();
+    }
     init() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -47,10 +56,22 @@ class Folder extends entry_1.Entry {
             return this;
         });
     }
+    initSync() {
+        try {
+            fs_1.default.opendirSync(this.path).close();
+        }
+        catch (e) {
+            fs_1.default.mkdirSync(this.path);
+        }
+        return this;
+    }
     openFolder(...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
             return Folder.open(this.path, ...pathList);
         });
+    }
+    openFolderSync(...pathList) {
+        return Folder.openSync(this.path, ...pathList);
     }
     copy(targetPath, exclude = []) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -65,17 +86,36 @@ class Folder extends entry_1.Entry {
                     promiseList.push(entry.copy(path_1.default.join(targetFolder.path, entry.name), exclude));
             }
             yield Promise.all(promiseList);
+            return targetFolder;
         });
+    }
+    copySync(targetPath, exclude = []) {
+        const targetFolder = Folder.openSync(targetPath);
+        if (typeof exclude === "string")
+            exclude = [exclude];
+        for (const entry of this.entryListSync.filter(file => !exclude.includes(file.name))) {
+            if (entry instanceof file_1.File)
+                entry.copySync(targetFolder.path, entry.name);
+            else
+                entry.copySync(path_1.default.join(targetFolder.path, entry.name), exclude);
+        }
+        return targetFolder;
     }
     openFile(...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
             return file_1.File.open(this.path, ...pathList);
         });
     }
+    openFileSync(...pathList) {
+        return file_1.File.openSync(this.path, ...pathList);
+    }
     readFile(...pathList) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield (yield this.openFile(...pathList)).read();
         });
+    }
+    readFileSync(...pathList) {
+        return this.openFileSync(...pathList).readSync();
     }
     //Maybe implement this in the future
     // public async writeFile(name: string, string_or_file: string | File | Promise<File>) {
@@ -93,6 +133,10 @@ class Folder extends entry_1.Entry {
             return (yield this.entryList).find(entry => nameList.includes(entry.name)) || null;
         });
     }
+    hasEntrySync(...nameList) {
+        const file = this.entryListSync;
+        return this.entryListSync.find(entry => nameList.includes(entry.name)) || null;
+    }
     /**
      * Returns the first folder found from the folder name list
      */
@@ -102,12 +146,24 @@ class Folder extends entry_1.Entry {
         });
     }
     /**
+     * Returns the first folder found from the folder name list synchronously
+     */
+    hasFolderSync(...nameList) {
+        return this.folderListSync.find(folder => nameList.includes(folder.name)) || null;
+    }
+    /**
      * Returns the first file found from the file name list
      */
     hasFile(...nameList) {
         return __awaiter(this, void 0, void 0, function* () {
             return (yield this.fileList).find(file => nameList.includes(file.name)) || null;
         });
+    }
+    /**
+     * Returns the first file found from the file name list synchronously
+     */
+    hasFileSync(...nameList) {
+        return this.fileListSync.find(file => nameList.includes(file.name)) || null;
     }
     getEntryList() {
         var _a, e_1, _b, _c;
@@ -140,6 +196,19 @@ class Folder extends entry_1.Entry {
     get entryList() {
         return this.getEntryList();
     }
+    get entryListSync() {
+        const entryList = [];
+        const directoryHandle = fs_1.default.opendirSync(this.path);
+        for (let entry; entry = directoryHandle.readSync();) {
+            if (entry.isDirectory()) {
+                entryList.push(this.openFolderSync(entry.name));
+            }
+            else if (entry.isFile()) {
+                entryList.push(this.openFileSync(entry.name));
+            }
+        }
+        return entryList;
+    }
     getFolderList() {
         return __awaiter(this, void 0, void 0, function* () {
             const folderList = [];
@@ -154,6 +223,15 @@ class Folder extends entry_1.Entry {
     get folderList() {
         return this.getFolderList();
     }
+    get folderListSync() {
+        const folderList = [];
+        for (const entry of this.entryListSync) {
+            if (entry instanceof Folder) {
+                folderList.push(entry);
+            }
+        }
+        return folderList;
+    }
     getFileList() {
         return __awaiter(this, void 0, void 0, function* () {
             const fileList = [];
@@ -167,6 +245,15 @@ class Folder extends entry_1.Entry {
     }
     get fileList() {
         return this.getFileList();
+    }
+    get fileListSync() {
+        const fileList = [];
+        for (const entry of this.entryListSync) {
+            if (entry instanceof file_1.File) {
+                fileList.push(entry);
+            }
+        }
+        return fileList;
     }
     getRecursiveFileList(fileList = []) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -184,27 +271,17 @@ class Folder extends entry_1.Entry {
     get recursiveFileList() {
         return this.getRecursiveFileList();
     }
-    getFolders() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const folders = {};
-            for (const folder of yield this.folderList)
-                folders[folder.name] = folder;
-            return folders;
-        });
-    }
-    get folders() {
-        return this.getFolders();
-    }
-    getFiles() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const files = {};
-            for (const file of yield this.fileList)
-                files[file.name] = file;
-            return files;
-        });
-    }
-    get files() {
-        return this.getFiles();
+    get recursiveFileListSync() {
+        const fileList = [];
+        for (const entry of this.entryListSync) {
+            if (entry instanceof file_1.File) {
+                fileList.push(entry);
+            }
+            else if (entry instanceof Folder) {
+                fileList.push(...entry.recursiveFileListSync);
+            }
+        }
+        return fileList;
     }
     require() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -213,6 +290,12 @@ class Folder extends entry_1.Entry {
                 return yield indexFile.require();
             throw new Error("To import a folder this folder has to have a index file or a file of the name of the folder FOLDER: " + this.path);
         });
+    }
+    requireSync() {
+        const indexFile = this.hasFileSync("index.js", this.name + ".js");
+        if (indexFile)
+            return indexFile.require();
+        throw new Error("To import a folder this folder has to have a index file or a file of the name of the folder FOLDER: " + this.path);
     }
 }
 exports.Folder = Folder;

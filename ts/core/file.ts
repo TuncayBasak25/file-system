@@ -10,6 +10,10 @@ export class File extends Entry<File> {
         return await (await File.open(filePath, ...pathList)).read();
     }
 
+    static readSync(filePath: string, ...pathList: string[]): string {
+        return File.openSync(filePath, ...pathList).readSync();
+    }
+
     static async open(filePath: string, ...pathList: string[]): Promise<File> {
         const absolute = path.resolve(path.join(filePath, ...pathList));
 
@@ -24,8 +28,28 @@ export class File extends Entry<File> {
         return await file.init();
     }
 
+    static openSync(filePath: string, ...pathList: string[]): File {
+        const absolute = path.resolve(path.join(filePath, ...pathList));
+
+        if (File.fileInstances[absolute]) {
+            return File.fileInstances[absolute];
+        }
+
+        const file = new File(absolute);
+
+        File.fileInstances[absolute] = file;
+
+        return file.initSync();
+    }
+
     private async init(): Promise<this> {
         await fs.promises.appendFile(this.path, "");
+
+        return this;
+    }
+
+    private initSync(): this {
+        fs.appendFileSync(this.path, "");
 
         return this;
     }
@@ -46,17 +70,37 @@ export class File extends Entry<File> {
         throw new Error("This file cannot be parsed as JSON!");
     }
 
+    public parseJSONSync(): any {
+        if (this.extension === 'json') {
+            return JSON.parse(this.readSync());
+        }
+
+        throw new Error("This file cannot be parsed as JSON!");
+    }
+
 
     public async read(): Promise<string> {
         return fs.promises.readFile(this.path, 'utf8');
+    }
+
+    public readSync(): string {
+        return fs.readFileSync(this.path, 'utf8');
     }
 
     public async write(text: string) {
         await fs.promises.writeFile(this.path, text);
     }
 
+    public writeSync(text: string) {
+        fs.writeFileSync(this.path, text);
+    }
+
     public async append(text: string) {
         await fs.promises.appendFile(this.path, text);
+    }
+
+    public appendSync(text: string) {
+        fs.appendFileSync(this.path, text);
     }
 
     public async copy(destPath: string, ...pathList: string[]): Promise<File> {
@@ -65,6 +109,16 @@ export class File extends Entry<File> {
         const file = await File.open(path.join(destPath, ...pathList));
 
         await file.write(content);
+
+        return file;
+    }
+
+    public copySync(destPath: string, ...pathList: string[]): File {
+        const content = this.readSync();
+
+        const file = File.openSync(path.join(destPath, ...pathList));
+
+        file.writeSync(content);
 
         return file;
     }
